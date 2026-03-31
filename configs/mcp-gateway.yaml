@@ -1,5 +1,5 @@
 port: ${MCP_GATEWAY_PORT:5235}
-pid: "${MCP_GATEWAY_PID:/var/run/mcp-gateway.pid}"
+pid: "${MCP_GATEWAY_PID:/Users/apple/workspace/golang/Unla/pid/mcp-gateway.pid}"
 reload_interval: ${MCP_GATEWAY_RELOAD_INTERVAL:600s}
 reload_switch: ${MCP_GATEWAY_RELOAD_SWITCH:true}
 
@@ -76,7 +76,7 @@ notifier:
   # Signal configuration (only used when type is signal)
   signal:
     signal: "${NOTIFIER_SIGNAL:SIGHUP}"
-    pid: "${NOTIFIER_SIGNAL_PID:/var/run/mcp-gateway.pid}"
+    pid: "${NOTIFIER_SIGNAL_PID:/Users/apple/workspace/golang/Unla/pid/mcp-gateway.pid}"
 
   # API configuration (only used when type is api)
   api:

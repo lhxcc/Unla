@@ -72,11 +72,11 @@ type ToolConfig struct {
 }
 
 type MCPServerConfig struct {
-	Type         string            `json:"type"`              // sse, stdio and streamable-http
+	Type         string            `json:"type"`              // sse and streamable-http
 	Name         string            `json:"name"`              // server name
-	Command      string            `json:"command,omitempty"` // for stdio
-	Args         []string          `json:"args,omitempty"`    // for stdio
-	Env          map[string]string `json:"env,omitempty"`     // for stdio
+	Command      string            `json:"command,omitempty"` // reserved for future use
+	Args         []string          `json:"args,omitempty"`    // reserved for future use
+	Env          map[string]string `json:"env,omitempty"`     // reserved for future use
 	URL          string            `json:"url,omitempty"`     // for sse and streamable-http
 	Policy       string            `json:"policy"`            // onStart or onDemand
 	Preinstalled bool              `json:"preinstalled"`      // whether to install this MCP server when mcp-gateway starts

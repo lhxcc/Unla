@@ -56,6 +56,29 @@ build-allinone:
 		-f deploy/docker/allinone/Dockerfile .
 	docker tag $(PROJECT_NAME)-allinone:$(IMAGE_TAG) $(PROJECT_NAME)-allinone:latest
 
+# Build all-in-one version for ARM64
+.PHONY: build-allinone-arm64
+build-allinone-arm64:
+	docker buildx build --platform linux/arm64 -t $(PROJECT_NAME)-allinone:$(IMAGE_TAG)-arm64 \
+		-f deploy/docker/allinone/Dockerfile .
+	docker tag $(PROJECT_NAME)-allinone:$(IMAGE_TAG)-arm64 $(PROJECT_NAME)-allinone:latest-arm64
+
+# Build all-in-one version for AMD64
+.PHONY: build-allinone-amd64
+build-allinone-amd64:
+	docker buildx build --platform linux/amd64 -t $(PROJECT_NAME)-allinone:$(IMAGE_TAG)-amd64 \
+		-f deploy/docker/allinone/Dockerfile .
+	docker tag $(PROJECT_NAME)-allinone:$(IMAGE_TAG)-amd64 $(PROJECT_NAME)-allinone:latest-amd64
+
+# Build and push multi-platform all-in-one image
+.PHONY: buildx-allinone
+buildx-allinone:
+	docker buildx build --platform linux/amd64,linux/arm64 \
+		-t $(PROJECT_NAME)-allinone:$(IMAGE_TAG) \
+		-t $(PROJECT_NAME)-allinone:latest \
+		-f deploy/docker/allinone/Dockerfile \
+		--push .
+
 # Run multi-container version
 .PHONY: run-multi
 run-multi:

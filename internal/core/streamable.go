@@ -260,7 +260,7 @@ func (s *Server) handleMCPRequest(c *gin.Context, req mcp.JSONRPCRequest, conn s
 				s.sendProtocolError(c, req.Id, "Failed to fetch tools", http.StatusInternalServerError, mcp.ErrorCodeInternalError)
 				return
 			}
-		case cnst.BackendProtoStdio, cnst.BackendProtoSSE, cnst.BackendProtoStreamable:
+		case cnst.BackendProtoSSE, cnst.BackendProtoStreamable:
 			transport := s.state.GetTransport(conn.Meta().Prefix)
 			if transport == nil {
 				s.sendProtocolError(c, req.Id, "Failed to fetch tools", http.StatusInternalServerError, mcp.ErrorCodeInternalError)
@@ -318,7 +318,7 @@ func (s *Server) handleMCPRequest(c *gin.Context, req mcp.JSONRPCRequest, conn s
 				status = "error"
 				return
 			}
-		case cnst.BackendProtoStdio, cnst.BackendProtoSSE, cnst.BackendProtoStreamable:
+		case cnst.BackendProtoSSE, cnst.BackendProtoStreamable:
 			transport := s.state.GetTransport(conn.Meta().Prefix)
 			if transport == nil {
 				errMsg := "Server configuration not found"
@@ -396,7 +396,7 @@ func (s *Server) handleMCPRequest(c *gin.Context, req mcp.JSONRPCRequest, conn s
 			if len(prompts) == 0 {
 				prompts = []mcp.PromptSchema{}
 			}
-		case cnst.BackendProtoStdio, cnst.BackendProtoSSE, cnst.BackendProtoStreamable:
+		case cnst.BackendProtoSSE, cnst.BackendProtoStreamable:
 			transport := s.state.GetTransport(conn.Meta().Prefix)
 			if transport == nil {
 				s.sendProtocolError(c, req.Id, "Failed to fetch prompts", http.StatusInternalServerError, mcp.ErrorCodeInternalError)
@@ -448,7 +448,7 @@ func (s *Server) handleMCPRequest(c *gin.Context, req mcp.JSONRPCRequest, conn s
 				}
 			}
 			logger.Info("PromptsGet-prompt found", zap.String("params.Name", params.Name), zap.String("promptname", prompt.Name))
-		case cnst.BackendProtoStdio, cnst.BackendProtoSSE, cnst.BackendProtoStreamable:
+		case cnst.BackendProtoSSE, cnst.BackendProtoStreamable:
 			transport := s.state.GetTransport(conn.Meta().Prefix)
 			if transport == nil {
 				s.sendProtocolError(c, req.Id, "Failed to fetch prompt", http.StatusInternalServerError, mcp.ErrorCodeInternalError)

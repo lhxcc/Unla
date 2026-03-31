@@ -163,7 +163,7 @@ export function LoginPage() {
         <CardHeader className="flex flex-col gap-1.5 p-6">
           <div className="flex items-center gap-2">
             <LocalIcon icon="lucide:server" className="text-primary text-2xl" />
-            <h1 className="text-2xl font-bold">Unla - MCP Gateway</h1>
+            <h1 className="text-2xl font-bold">H2M - MCP Gateway</h1>
           </div>
           <p className="text-default-500">
             {t('auth.login_to_continue')}

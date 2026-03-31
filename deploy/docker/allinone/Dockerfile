@@ -1,6 +1,9 @@
-FROM golang:1.24.1 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.24.1 AS builder
 
 WORKDIR /app
+
+# Configure Go to use China proxy for faster downloads
+ENV GOPROXY=https://goproxy.cn,direct
 
 COPY go.mod go.sum ./
 
@@ -8,9 +11,15 @@ RUN go mod download
 
 COPY . .
 
-RUN GOOS=linux go build -o /app/bin/apiserver ./cmd/apiserver
-RUN GOOS=linux go build -o /app/bin/mcp-gateway ./cmd/mcp-gateway
-RUN GOOS=linux go build -o /app/bin/mock-server ./cmd/mock-server
+ARG TARGETOS
+ARG TARGETARCH
+
+# Disable CGO to build static binaries (avoids pthread_create permission issues in containers)
+ENV CGO_ENABLED=0
+
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/bin/apiserver ./cmd/apiserver
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/bin/mcp-gateway ./cmd/mcp-gateway
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/bin/mock-server ./cmd/mock-server
 
 FROM node:20.18.0 AS web-builder
 

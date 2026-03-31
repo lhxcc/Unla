@@ -36,7 +36,7 @@ export interface MCPServerConfig {
   env?: Record<string, string>;
   url?: string;
   policy: string;
-  preinstalled: boolean;
+  preinstalled?: boolean;
 }
 
 export interface ToolConfig {

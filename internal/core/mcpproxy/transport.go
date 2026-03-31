@@ -15,8 +15,6 @@ type TransportType string
 const (
 	// TypeSSE represents SSE-based transport
 	TypeSSE TransportType = "sse"
-	// TypeStdio represents stdio-based transport
-	TypeStdio TransportType = "stdio"
 	// TypeStreamable represents streamable HTTP-based transport
 	TypeStreamable TransportType = "streamable-http"
 )
@@ -49,8 +47,6 @@ func NewTransport(cfg config.MCPServerConfig) (Transport, error) {
 	switch TransportType(cfg.Type) {
 	case TypeSSE:
 		return &SSETransport{cfg: cfg}, nil
-	case TypeStdio:
-		return &StdioTransport{cfg: cfg}, nil
 	case TypeStreamable:
 		return &StreamableTransport{cfg: cfg}, nil
 	default:

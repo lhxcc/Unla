@@ -197,8 +197,6 @@ func BuildStateFromConfig(ctx context.Context, cfgs []*config.MCPConfig, oldStat
 
 				// Map protocol type based on server type
 				switch mcpServer.Type {
-				case cnst.BackendProtoStdio.String():
-					runtime.protoType = cnst.BackendProtoStdio
 				case cnst.BackendProtoSSE.String():
 					runtime.protoType = cnst.BackendProtoSSE
 				case cnst.BackendProtoStreamable.String():

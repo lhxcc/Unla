@@ -18,7 +18,7 @@ i18n:
 # Super admin configuration
 super_admin:
   username: "${SUPER_ADMIN_USERNAME:admin}"
-  password: "${SUPER_ADMIN_PASSWORD:admin}"
+  password: "${SUPER_ADMIN_PASSWORD:admin123}"
 
 database:
   type: "${APISERVER_DB_TYPE:sqlite}"
@@ -52,7 +52,7 @@ notifier:
   # Signal configuration (only used when type is signal)
   signal:
     signal: "${APISERVER_NOTIFIER_SIGNAL:SIGHUP}"
-    pid: "${APISERVER_NOTIFIER_SIGNAL_PID:/var/run/mcp-gateway.pid}"
+    pid: "${APISERVER_NOTIFIER_SIGNAL_PID:/Users/apple/workspace/golang/Unla/pid/mcp-gateway.pid}"
 
   # API configuration (only used when type is api)
   api:

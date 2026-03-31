@@ -15,13 +15,6 @@ func TestNewTransportVariantsAndUnknown(t *testing.T) {
 		assert.True(t, ok)
 	}
 
-	stdio, err := NewTransport(config.MCPServerConfig{Type: string(TypeStdio), Command: "echo"})
-	assert.NoError(t, err)
-	if assert.NotNil(t, stdio) {
-		_, ok := stdio.(*StdioTransport)
-		assert.True(t, ok)
-	}
-
 	stream, err := NewTransport(config.MCPServerConfig{Type: string(TypeStreamable), URL: "http://localhost"})
 	assert.NoError(t, err)
 	if assert.NotNil(t, stream) {
@@ -36,12 +29,10 @@ func TestNewTransportVariantsAndUnknown(t *testing.T) {
 func TestTransportTypes(t *testing.T) {
 	// Test that transport type constants have expected values
 	assert.Equal(t, TransportType("sse"), TypeSSE)
-	assert.Equal(t, TransportType("stdio"), TypeStdio)
 	assert.Equal(t, TransportType("streamable-http"), TypeStreamable)
 
 	// Test type conversion
 	assert.Equal(t, string(TypeSSE), "sse")
-	assert.Equal(t, string(TypeStdio), "stdio")
 	assert.Equal(t, string(TypeStreamable), "streamable-http")
 }
 

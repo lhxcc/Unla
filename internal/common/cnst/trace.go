@@ -20,8 +20,6 @@ const (
 	SpanMCPMethodPrefix = "mcp.method."
 
 	// Transport-specific spans
-	SpanTransportStdIOFetchTools      = "mcp.transport.stdio.fetch_tools"
-	SpanTransportStdIOCallTool        = "mcp.transport.stdio.call_tool"
 	SpanTransportSSEFetchTools        = "mcp.transport.sse.fetch_tools"
 	SpanTransportSSECallTool          = "mcp.transport.sse.call_tool"
 	SpanTransportStreamableFetchTools = "mcp.transport.streamable.fetch_tools"

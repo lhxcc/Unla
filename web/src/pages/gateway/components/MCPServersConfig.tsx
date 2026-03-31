@@ -1,5 +1,5 @@
-import { Input, Select, SelectItem, Button, Switch, Accordion, AccordionItem } from "@heroui/react";
-import { useState, useEffect, useMemo } from 'react';
+import { Input, Select, SelectItem, Button, Accordion, AccordionItem } from "@heroui/react";
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LocalIcon from '@/components/LocalIcon';
@@ -17,57 +17,28 @@ export function MCPServersConfig({
   const { t } = useTranslation();
   const mcpServers = useMemo(() => 
     parsedConfig?.mcpServers || [{
-      type: "stdio",
+      type: "sse",
       name: "",
-      command: "",
-      args: [],
-      env: {},
-      policy: "onDemand",
-      preinstalled: false
+      url: "",
+      policy: "onDemand"
     }],
     [parsedConfig?.mcpServers]
   );
-  const [commandInputs, setCommandInputs] = useState<{ [key: number]: string }>({});
 
-  // Initialize command inputs when mcpServers changes
-  useEffect(() => {
-    const initialInputs = mcpServers.reduce<{ [key: number]: string }>((acc, server, index) => {
-      acc[index] = `${server.command || ''} ${server.args?.join(' ') || ''}`.trim();
-      return acc;
-    }, {});
-    setCommandInputs(initialInputs);
-  }, [mcpServers]);
-
-  const updateServer = (index: number, field: 'name' | 'type' | 'policy' | 'command' | 'url' | 'preinstalled', value: string | boolean) => {
+  const updateServer = (index: number, field: 'name' | 'type' | 'policy' | 'url', value: string) => {
     const updatedServers = [...mcpServers];
     const oldName = updatedServers[index].name;
     
-    if (field === 'command') {
-      // Split the command string by whitespace and update both command and args
-      const commandValue = value as string;
-      const parts = commandValue.trim().split(/\s+/);
-      updatedServers[index] = {
-        ...updatedServers[index],
-        command: parts[0] || '',
-        args: parts.slice(1)
-      };
-    } else if (field === 'preinstalled') {
-      updatedServers[index] = {
-        ...updatedServers[index],
-        [field]: value as boolean
-      };
-    } else {
-      updatedServers[index] = {
-        ...updatedServers[index],
-        [field]: value as string
-      };
-    }
+    updatedServers[index] = {
+      ...updatedServers[index],
+      [field]: value
+    };
 
     // If server name changed, update router references
     if (field === 'name' && oldName !== value && parsedConfig.routers) {
       const updatedRouters = parsedConfig.routers.map(router => {
         if (router.server === oldName) {
-          return { ...router, server: value as string };
+          return { ...router, server: value };
         }
         return router;
       });
@@ -77,107 +48,12 @@ export function MCPServersConfig({
     }
   };
 
-  const handleCommandInputChange = (index: number, value: string) => {
-    setCommandInputs(prev => ({
-      ...prev,
-      [index]: value
-    }));
-  };
-
-  const handleCommandInputBlur = (index: number) => {
-    updateServer(index, 'command', commandInputs[index]);
-  };
-
-  const updateEnvVariable = (serverIndex: number, envIndex: number, field: 'key' | 'value', value: string) => {
-    const updatedServers = [...mcpServers];
-    const server = updatedServers[serverIndex];
-    const env = { ...server.env };
-    const envKeys = Object.keys(env);
-    const key = envKeys[envIndex];
-
-    if (field === 'key') {
-      if (key !== value) {
-        env[value] = env[key];
-        delete env[key];
-      }
-    } else {
-      env[key] = value;
-    }
-
-    updatedServers[serverIndex] = {
-      ...server,
-      env
-    };
-
-    updateConfig({ mcpServers: updatedServers });
-  };
-
-  const addEnvVariable = (serverIndex: number) => {
-    const updatedServers = [...mcpServers];
-    const server = updatedServers[serverIndex];
-    const env = { ...server.env };
-
-    let newKey = "API_KEY";
-    let count = 1;
-
-    const commonEnvVars = [
-      "AUTH_TOKEN",
-      "OPENAI_API_KEY",
-      "ANTHROPIC_API_KEY",
-      "GITHUB_TOKEN",
-      "MODEL_NAME"
-    ];
-
-    const existingKeys = Object.keys(env);
-
-    for (const envVar of commonEnvVars) {
-      if (!existingKeys.includes(envVar)) {
-        newKey = envVar;
-        break;
-      }
-    }
-
-    if (existingKeys.includes(newKey)) {
-      while (existingKeys.includes(`ENV_VAR_${count}`)) {
-        count++;
-      }
-      newKey = `ENV_VAR_${count}`;
-    }
-
-    env[newKey] = "";
-
-    updatedServers[serverIndex] = {
-      ...server,
-      env
-    };
-
-    updateConfig({ mcpServers: updatedServers });
-  };
-
-  const removeEnvVariable = (serverIndex: number, envIndex: number) => {
-    const updatedServers = [...mcpServers];
-    const server = updatedServers[serverIndex];
-    const env = { ...server.env };
-    const key = Object.keys(env)[envIndex];
-    delete env[key];
-
-    updatedServers[serverIndex] = {
-      ...server,
-      env
-    };
-
-    updateConfig({ mcpServers: updatedServers });
-  };
-
   const addServer = () => {
     const newServer: MCPServerConfig = {
-      type: "stdio",
+      type: "sse",
       name: "",
-      command: "",
-      args: [],
-      env: {},
-      policy: "onDemand",
-      preinstalled: false
+      url: "",
+      policy: "onDemand"
     };
     updateConfig({
       mcpServers: [...mcpServers, newServer]
@@ -201,9 +77,7 @@ export function MCPServersConfig({
             subtitle={server.type}
             startContent={
               <LocalIcon icon={
-                  server.type === 'stdio' ? 'lucide:terminal' :
-                  server.type === 'sse' ? 'lucide:radio' :
-                  'lucide:globe'
+                  server.type === 'sse' ? 'lucide:radio' : 'lucide:globe'
                 } 
                 className="text-primary-500" 
               />
@@ -220,11 +94,10 @@ export function MCPServersConfig({
                 />
                 <Select
                   label={t('gateway.mcp_type')}
-                  selectedKeys={[server.type || "stdio"]}
+                  selectedKeys={[server.type || "sse"]}
                   onChange={(e) => updateServer(index, 'type', e.target.value)}
                   aria-label={t('gateway.mcp_type')}
                 >
-                  <SelectItem key="stdio" textValue="stdio">stdio</SelectItem>
                   <SelectItem key="sse" textValue="sse">sse</SelectItem>
                   <SelectItem key="streamable-http" textValue="streamable-http">streamable-http</SelectItem>
                 </Select>
@@ -239,71 +112,6 @@ export function MCPServersConfig({
                 <SelectItem key="onDemand" textValue={t('gateway.policy_on_demand')}>{t('gateway.policy_on_demand')}</SelectItem>
                 <SelectItem key="onStart" textValue={t('gateway.policy_on_start')}>{t('gateway.policy_on_start')}</SelectItem>
               </Select>
-
-              {(server.type === 'stdio' || !server.type) && (
-                <>
-                  <div className="bg-content1 p-4 rounded-medium border border-content2">
-                    <Switch
-                      isSelected={server.preinstalled}
-                      onValueChange={(value) => updateServer(index, 'preinstalled', value)}
-                      size="sm"
-                    >
-                      {t('gateway.preinstalled')}
-                    </Switch>
-
-                    <Input
-                      label={t('gateway.command')}
-                      value={commandInputs[index] || ''}
-                      onChange={(e) => handleCommandInputChange(index, e.target.value)}
-                      onBlur={() => handleCommandInputBlur(index)}
-                      placeholder="command arg1 arg2 arg3"
-                      type="text"
-                      inputMode="text"
-                      className="mt-4"
-                    />
-
-                    <div className="mt-4">
-                      <h4 className="text-sm font-medium mb-2">{t('gateway.env_variables')}</h4>
-                      <div className="flex flex-col gap-2">
-                        {Object.entries(server.env || {}).map(([key, value], envIndex) => (
-                          <div key={envIndex} className="flex items-center gap-2">
-                            <Input
-                              className="flex-1"
-                              value={key}
-                              onChange={(e) => updateEnvVariable(index, envIndex, 'key', e.target.value)}
-                              placeholder={t('gateway.env_key_placeholder')}
-                            />
-                            <Input
-                              className="flex-1"
-                              value={String(value)}
-                              onChange={(e) => updateEnvVariable(index, envIndex, 'value', e.target.value)}
-                              placeholder={t('gateway.env_value_placeholder')}
-                            />
-                            <Button
-                              color="danger"
-                              variant="flat"
-                              isIconOnly
-                              onPress={() => removeEnvVariable(index, envIndex)}
-                            >
-                              <LocalIcon icon="lucide:x" />
-                            </Button>
-                          </div>
-                        ))}
-
-                        <Button
-                          color="primary"
-                          variant="flat"
-                          size="sm"
-                          startContent={<LocalIcon icon="lucide:plus" />}
-                          onPress={() => addEnvVariable(index)}
-                        >
-                          {t('gateway.add_env_variable')}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
 
               {(server.type === 'sse' || server.type === 'streamable-http') && (
                 <div className="bg-content1 p-4 rounded-medium border border-content2">

@@ -59,11 +59,10 @@ func StartMockServer(addr string) {
 	defer stop()
 
 	// Create error channel to collect errors from all servers
-	errChan := make(chan error, 3)
+	errChan := make(chan error, 2)
 
 	// Start all servers with context
 	go startHTTPServer(ctx, addr, errChan)
-	go startStdioServer(ctx, errChan)
 	go startSSEServer(ctx, addr, errChan)
 
 	// Wait for either context cancellation or error
@@ -84,15 +83,6 @@ func startHTTPServer(_ context.Context, addr string, errChan chan<- error) {
 	httpServer := backend.NewHTTPServer()
 	if err := httpServer.Start(addr); err != nil {
 		errChan <- fmt.Errorf("HTTP server error: %w", err)
-	}
-}
-
-func startStdioServer(_ context.Context, errChan chan<- error) {
-	mcpServer := backend.NewMCPServer()
-
-	logger.Info("Starting MCP server on stdio")
-	if err := server.ServeStdio(mcpServer); err != nil {
-		errChan <- fmt.Errorf("stdio server error: %w", err)
 	}
 }
 

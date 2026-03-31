@@ -827,19 +827,6 @@ export function GatewayManager() {
                                           {mcpServer.type}
                                         </Chip>
                                       </div>
-                                      {mcpServer.type === 'stdio' && (
-                                        <div className="text-xs">
-                                          <div className="flex items-center gap-1">
-                                            <span className="font-medium">Command:</span>
-                                            <code className="bg-default-100 px-1 rounded">{mcpServer.command} {mcpServer.args?.join(' ')}</code>
-                                          </div>
-                                          {mcpServer.env && Object.entries(mcpServer.env).map(([key, value]) => (
-                                            <div key={key} className="text-xs truncate">
-                                              <span className="text-default-500">{key}:</span> {String(value)}
-                                            </div>
-                                          ))}
-                                        </div>
-                                      )}
                                       {(mcpServer.type === 'sse' || mcpServer.type === 'streamable-http') && mcpServer.url && (
                                         <div className="text-xs">
                                           <div className="flex items-start gap-1">
@@ -1036,19 +1023,6 @@ export function GatewayManager() {
                                         {mcpServer.type}
                                       </Chip>
                                     </div>
-                                    {mcpServer.type === 'stdio' && (
-                                      <div className="text-xs">
-                                        <div className="flex items-center gap-1">
-                                          <span className="font-medium">Command:</span>
-                                          <code className="bg-default-100 px-1 rounded">{mcpServer.command} {mcpServer.args?.join(' ')}</code>
-                                        </div>
-                                        {mcpServer.env && Object.entries(mcpServer.env).map(([key, value]) => (
-                                          <div key={key} className="text-xs truncate">
-                                            <span className="text-default-500">{key}:</span> {String(value)}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
                                     {(mcpServer.type === 'sse' || mcpServer.type === 'streamable-http') && mcpServer.url && (
                                       <div className="text-xs">
                                         <div className="flex items-start gap-1">
@@ -1411,19 +1385,6 @@ export function GatewayManager() {
                                 {mcpServer.type}
                               </Chip>
                             </div>
-                            {mcpServer.type === 'stdio' && (
-                              <div className="text-xs">
-                                <div className="flex items-center gap-1">
-                                  <span className="font-medium">Command:</span>
-                                  <code className="bg-default-100 px-1 rounded">{mcpServer.command} {mcpServer.args?.join(' ')}</code>
-                                </div>
-                                {mcpServer.env && Object.entries(mcpServer.env).map(([key, value]) => (
-                                  <div key={key} className="text-xs truncate">
-                                    <span className="text-default-500">{key}:</span> {String(value)}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
                             {(mcpServer.type === 'sse' || mcpServer.type === 'streamable-http') && mcpServer.url && (
                               <div className="text-xs">
                                 <div className="flex items-start gap-1">
