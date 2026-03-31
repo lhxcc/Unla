@@ -83,7 +83,7 @@ class MCPService {
       );
 
       const client = new Client({
-        name: 'unla-web',
+        name: 'h2m-web',
         version: __APP_VERSION__
       });
 
